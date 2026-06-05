@@ -1,0 +1,12 @@
+[project]
+name = "docker-testes"
+version = "0.1.0"
+description = "Testando o Docker com UV e Django."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+# ADICIONE ESTE BLOCO ABAIXO (Requisito do uv sync para aplicações web)
+[tool.uv]
+managed = true
+package = false
