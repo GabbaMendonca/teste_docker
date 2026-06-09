@@ -37,7 +37,8 @@ EXPOSE 8000
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
-    libpq-dev && \
+    libpq-dev \
+    netcat-openbsd && \
     rm -rf /var/lib/apt/lists/* && \
     # Cria o usuário de segurança
     adduser --disabled-password --no-create-home duser && \
@@ -66,9 +67,11 @@ RUN uv sync --no-install-project --no-dev
 COPY ./djangoapp /djangoapp
 COPY ./scripts /scripts
 
-# Agora que os arquivos existem, aplicamos as permissões necessárias
-RUN chmod -R +x /scripts && \
-    chown -R duser:duser /djangoapp
+# Garante permissão total de execução no script e define os donos das pastas
+RUN chmod +x /scripts/commands.sh && \
+    chmod -R 755 /scripts && \
+    chown -R duser:duser /djangoapp && \
+    chown -R duser:duser /scripts
 
 # Sincronização final do projeto dentro do container
 RUN uv sync --no-dev
@@ -78,4 +81,4 @@ RUN uv sync --no-dev
 # USER duser
 
 # Executa o arquivo scripts/commands.sh
-CMD ["commands.sh"]
+CMD ["/scripts/commands.sh"]
